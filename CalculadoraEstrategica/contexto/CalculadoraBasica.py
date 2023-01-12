@@ -7,35 +7,42 @@ from CalculadoraEstrategica.operaciones.Suma import Suma
 
 class CalculadoraBasica:
     def __init__(self):
-        self._operacion = None
+        self.operacion = None
 
     def is_operacion(self) -> bool:
-        return self._operacion is not None
+        return self.operacion is not None
 
     def ejecuta_operacion(self, operando: float, operando2: float):
-        return self._operacion.ejecuta(operando, operando2)
+        return self.operacion.ejecuta(operando, operando2)
 
-    class Builder(BuilderCalculadora):
-        # calculadora: CalculadoraBasica = Non
 
-        def __init__(self):
-            self._calculadora: CalculadoraBasica = CalculadoraBasica()
+class CalculadoraBasicaBuilder(BuilderCalculadora):
+    def __init__(self):
+        self.calculadora = CalculadoraBasica()
 
-        @staticmethod
-        def operacion(operador: str, self) -> BuilderCalculadora:
-            match operador:
-                case "+":
-                    self._calculadora.operacion = Suma()
-                case "-":
-                    self._calculadora.operacion = Resta()
-                case "*":
-                    self._calculadora.operacion = Multiplicacion()
-                case "x":
-                    self._calculadora.operacion = Division()
-                case _:
-                    self._calculadora.operacion = None
-            return self
+    def operacion_por_usar(self, operador: str):
 
-        @staticmethod
-        def build(self):
-            return self._calculadora
+        if (operador == "+"):
+            suma = Suma()
+            self.calculadora.operacion = suma
+        elif (operador == "-"):
+            self.calculadora.operacion = Resta()
+        elif (operador == "*"):
+            self.calculadora.operacion = Multiplicacion()
+        elif (operador == "/"):
+            self.calculadora.operacion = Division()
+        else:
+            self.calculadora.operacion = None
+
+        return self
+
+    def build(self):
+        return self.calculadora
+
+
+class Director:
+    def __init__(self, calculadora_builder: CalculadoraBasicaBuilder):
+        self.cb = calculadora_builder
+
+    def get_calculadora(self):
+        return self.cb.operacion_por_usar("/").build()
