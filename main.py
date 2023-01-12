@@ -16,7 +16,10 @@ async def root():
 async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
-
+"""
+cambie la url para que fuera mas corta
+la anterior era:
+/api/calculadora/operacion/"""
 @app.get("/operacion/")
 async def calcula(num: int = 0, num2: int = 0):
     resultado = 0
